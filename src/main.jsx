@@ -1,7 +1,10 @@
-// React CDN wala version use ho raha hai isliye "import" ki zarurat nahi 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// No imports needed here
+const rootElement = document.getElementById('root');
+const root = ReactDOM.createRoot(rootElement);
+
+// Hum App ki jagah window.MyNotesApp use kar rahe hain
 root.render(
   <React.StrictMode>
-    <App />
+    <window.MyNotesApp />
   </React.StrictMode>
 );

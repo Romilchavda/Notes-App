@@ -1,27 +1,22 @@
+// No imports needed here
 const { useState, useEffect } = React;
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [text, setText] = useState('');
 
-  // Storage se purane notes uthana
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('notes-data')) || [];
+    const saved = JSON.parse(localStorage.getItem('my_notes')) || [];
     setNotes(saved);
   }, []);
 
-  // Naye notes save karna
   useEffect(() => {
-    localStorage.setItem('notes-data', JSON.stringify(notes));
+    localStorage.setItem('my_notes', JSON.stringify(notes));
   }, [notes]);
 
   const addNote = () => {
     if (!text.trim()) return;
-    const newNote = {
-      id: Date.now(),
-      content: text,
-      date: new Date().toLocaleDateString()
-    };
+    const newNote = { id: Date.now(), text, date: new Date().toLocaleDateString() };
     setNotes([newNote, ...notes]);
     setText('');
   };
@@ -31,47 +26,39 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 p-5 font-sans">
-      <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-black text-slate-800 mb-6 text-center tracking-tight">
-          POCKET NOTES 📒
-        </h1>
+    <div className="max-w-md mx-auto p-4 min-h-screen">
+      <h1 className="text-2xl font-bold text-blue-600 mb-6 text-center">My Notes 📝</h1>
+      
+      <div className="bg-white p-4 rounded-xl shadow-md mb-6 border border-gray-100">
+        <textarea 
+          className="w-full p-2 outline-none text-gray-700"
+          placeholder="Yahan likhein..."
+          rows="3"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <button 
+          onClick={addNote}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg mt-2 font-semibold active:scale-95 transition-all"
+        >
+          Save Note
+        </button>
+      </div>
 
-        {/* Input Card */}
-        <div className="bg-white rounded-2xl shadow-lg p-4 mb-6">
-          <textarea 
-            className="w-full border-none outline-none text-lg resize-none"
-            placeholder="Kuch yaad rakhna hai?..."
-            rows="3"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-          <button 
-            onClick={addNote}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold mt-2 active:scale-95 transition-all shadow-blue-200 shadow-lg"
-          >
-            Add Note
-          </button>
-        </div>
-
-        {/* List of Notes */}
-        <div className="space-y-4">
-          {notes.map(note => (
-            <div key={note.id} className="bg-yellow-50 p-4 rounded-xl shadow-sm border-l-4 border-yellow-400 flex justify-between items-start animate-in fade-in duration-500">
-              <div className="flex-1">
-                <p className="text-slate-700 text-lg">{note.content}</p>
-                <span className="text-[10px] font-bold text-slate-400 mt-2 block uppercase uppercase">{note.date}</span>
-              </div>
-              <button onClick={() => deleteNote(note.id)} className="text-red-400 p-1">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
-                </svg>
-              </button>
+      <div className="space-y-4">
+        {notes.map(note => (
+          <div key={note.id} className="bg-yellow-100 p-4 rounded-lg shadow flex justify-between items-start border-l-4 border-yellow-400">
+            <div>
+              <p className="text-gray-800">{note.text}</p>
+              <span className="text-[10px] text-gray-400 mt-2 block">{note.date}</span>
             </div>
-          ))}
-          {notes.length === 0 && <p className="text-center text-slate-400 mt-10">Khali hai! Kuch likhiye...</p>}
-        </div>
+            <button onClick={() => deleteNote(note.id)} className="text-red-400 font-bold px-2">✕</button>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
+
+// Ye line zaroori hai taaki main.jsx ko ye mil sake
+window.MyNotesApp = App;
